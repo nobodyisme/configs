@@ -1,0 +1,146 @@
+"VI compatibility off
+set nocompatible
+
+"Filetype plugins
+filetype on
+filetype plugin on
+
+"Python tab recommendations
+set tabstop=4 
+set shiftwidth=4
+set smarttab
+set expandtab
+set softtabstop=4
+
+set autoindent
+
+let python_highlight_all = 1
+
+"256 colors in terminal
+set t_Co=256
+
+"omnicompletion settings
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+
+"Tab for rope autocompletion
+function! TabWrapperRope()
+  if strpart(getline('.'), 0, col('.')-1) =~ '^\s*$'
+      return "\<Tab>"
+   else
+      return "\<C-R>=RopeCodeAssistInsertMode()\<CR>"
+   :BufExplorer
+   endif
+endfunction
+imap <Tab> <C-R>=TabWrapperRope()<CR>
+
+set complete=""
+set complete+=.
+set complete+=k
+set complete+=b
+set complete+=t
+
+"Trail spaces on .py files
+autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
+"Smart indentation after keywords
+autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+
+"SnippletsEmu mapped to C-j
+let g:snippetsEmu_key = "<C-j>"
+let g:pydiction_location = '~/.vim/pydiction/complete-dict'
+
+"Color scheme
+colorscheme wombat256
+if has("gui_running")
+    colors desert
+    " line numbers color
+    hi LineNr guifg=grey45 guibg=grey20
+endif
+
+"Basic settings
+syntax on
+set nu "string numeration
+set mousehide
+set mouse=a "mouse support on
+set termencoding=utf-8
+set novisualbell
+set t_vb= "stop beeping
+set backspace=indent,eol,start whichwrap+=<,>,[,] "smart backspace
+set showtabline=0
+set foldcolumn=1
+
+"String wrapping
+set wrap
+set linebreak
+
+"no .swp and ~ (backup) files
+set nobackup
+set noswapfile
+
+set encoding=utf-8 "default files encoding
+set fileencodings=utf8,cp1251 "possible encoding order
+
+set ffs=unix,dos,mac
+
+let ropevim_vim_completion=1
+
+"Ctags autocompletion
+python << EOF
+import os
+import sys
+import vim
+for p in sys.path:
+    if os.path.isdir(p):
+        vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
+EOF
+
+set tags+=$HOME/.vim/tags/python.ctags
+map <silent><C-Left> <C-T>
+map <silent><C-Right> <C-]>
+
+"Tab bindings
+ino <silent><C-t> <C-o>:tabnew<CR>
+ino <silent><C-Tab> <C-o>:tabnext<CR>
+ino <silent><C-S-Tab> <C-o>:tabprevious<CR>
+nno <silent><C-Tab> :silent! tabnext<CR>
+nno <silent><C-S-Tab> :silent! tabprevious<CR>
+
+ino <C-z> <C-o>:undo<CR>
+ino <C-y> <C-o>:redo<CR>
+
+ino <C-d> <C-o>dd
+
+ino <C-e> <C-o>:e!<Space>
+nno <C-e> :e!<Space>
+
+nno <C-s> :w<CR>
+ino <C-s> <C-o>:w<CR>
+vno <C-s> <C-o>:w<CR>
+
+nmap <M-w> :bd!<CR>
+imap <M-w> <C-o>:bd!<CR>
+vmap <M-w> <C-o>:bd!<CR>
+
+"selection, cut/copy/paste
+so $VIMRUNTIME/mswin.vim
+
+"Project plugin bindings
+nmap <C-P> :Project<CR>
+vmap <C-P> <C-o>:Project<CR>
+imap <C-P> <C-o>:Project<CR>
+
+"Bufexplorer plugin bindings
+nmap <C-B> <C-o>:BufExplorer<cr>
+vmap <C-B> <C-o>:BufExplorer<cr>
+imap <C-B> <C-o>:BufExplorer<cr>
+
+nmap <C-PageUp> :bp!<CR>
+imap <C-PageUp> <C-o>:bp!<CR>
+vmap <C-PageUp> <C-o>:bp!<CR>
+
+nmap <C-PageDown> :bn!<CR>
+imap <C-PageDown> <C-o>:bn!<CR>
+vmap <C-PageDown> <C-o>:bn!<CR>
+
